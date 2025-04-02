@@ -12,7 +12,7 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: light) {
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
@@ -23,4 +23,35 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+@layer base{
+  h1{
+    @apply text-3xl font-bold;
+  }
+  h2{
+    @apply text-2xl font-bold;
+  }
+  h3{
+    @apply text-xl font-bold;
+  }
+  h4{
+    @apply text-lg font-bold;
+  }
+  h5{
+    @apply text-base font-bold;
+  }
+  h6{
+    @apply text-sm font-bold;
+  }
+  p{
+    @apply text-sm text-[#f1f3f5];
+  }
+}
+@layer components{
+  .icon{
+    @apply  text-[#f1f3f5] text-xl;
+  }
+  .btn{
+    @apply hover:no-underline bg-[#0084d4] hover:bg-[#009fff] tracking-wider w-full text-center text-[#18222f] font-bold cursor-pointer uppercase px-4 py-2 rounded-md transition-colors block;
+  }
 }
