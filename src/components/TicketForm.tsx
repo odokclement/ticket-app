@@ -3,7 +3,18 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-const TicketForm =  () => {
+interface Ticket {
+  _id: string;
+  title?: string;
+  description?: string;
+  category?: string;
+  priority?: number;
+  progress?: number;
+  status?: string;
+}
+
+const TicketForm =  ({ticket}: { ticket: Ticket }) => {
+  const EDITMODE = ticket._id ==="new"?false :true;
     const router = useRouter();
   const startingTicketData = {
     title: "",
@@ -13,6 +24,15 @@ const TicketForm =  () => {
     progress: 0,
     status: "not started",
   };
+
+  if(EDITMODE){
+    startingTicketData["title"] = ticket.title || "";
+    startingTicketData["description"] = ticket.description || "";
+    startingTicketData["priority"] = ticket.priority ?? 1;
+    startingTicketData["progress"] = ticket.progress ?? 0;
+    startingTicketData["status"] = ticket.status || "not started";
+    startingTicketData["category"] = ticket.category || "";
+  }
 
   const [formData, setFormData] = useState(startingTicketData);
 
@@ -45,6 +65,21 @@ interface TicketResponse {
 
 const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
+
+    if(EDITMODE){
+      const response: TicketResponse = await fetch(`/api/Tickets/${ticket._id}`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ formdata: formData }),
+    });
+
+    if (!response.ok) {
+        console.log("Error updating ticket");
+    }
+
+    }else{
     const response: TicketResponse = await fetch("/api/Tickets", {
         method: "POST",
         headers: {
@@ -55,6 +90,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> 
 
     if (!response.ok) {
         console.log("Error creating ticket");
+    }
     }
 
     router.refresh();
@@ -170,7 +206,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> 
             </select>
             <input
             type="submit"
-            value="Create Ticket"
+            value={ EDITMODE?"Update Ticket":"Create Ticket"}
             className="btn"
             />
       </form>
