@@ -19,12 +19,12 @@ interface TicketPageParams {
 }
 
 const TicketPage = async ({ params }: { params: TicketPageParams }) => {
-  const EDITMODE = params.id === "new" ? false : true;
+  const EDITMODE =  (await params).id === "new" ? false : true;
 
   let updateTicketData = {_id: " new"};
 
   if (EDITMODE) {
-    const ticketData = await getTicketById(params.id);
+    const ticketData = await getTicketById(( await params).id);
     updateTicketData = ticketData.foundTicket;
   }
 
